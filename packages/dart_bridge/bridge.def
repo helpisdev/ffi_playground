@@ -1,0 +1,7 @@
+LIBRARY   waku_dart_bridge
+EXPORTS
+    init
+    registerCBInvoker
+    registerCB
+    invokeCB
+    releaseCB

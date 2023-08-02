@@ -1,0 +1,19 @@
+name: suuuiiii
+description: A new Flutter project.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.6 <4.0.0"
+
+dependencies:
+  ffi: ^2.0.2
+  flutter:
+    sdk: flutter
+  path: ^1.8.3
+
+dev_dependencies:
+  ffigen: ^9.0.1
+
+flutter:
+  uses-material-design: true
