@@ -167,5 +167,5 @@ ffi.DynamicLibrary _openDynamicLibrary(final String out, final String libname) {
   return ffi.DynamicLibrary.open(out + path);
 }
 
-String _join(final String subfolder) => 'packages$separator${subfolder}_rust'
+String _join(final String subfolder) => 'packages$separator$subfolder'
     '${separator}target${separator}release$separator';

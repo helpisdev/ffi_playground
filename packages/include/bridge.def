@@ -1,0 +1,8 @@
+LIBRARY   waku_dart_bridge
+EXPORTS
+    CallbackInvoker
+    init
+    register_invoker
+    register_callback
+    invoke
+    release

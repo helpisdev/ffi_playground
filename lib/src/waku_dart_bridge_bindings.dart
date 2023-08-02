@@ -8,9 +8,9 @@
 // ignore_for_file: type=lint
 import 'dart:ffi' as ffi;
 
-/// Bindings for `packages/dart_bridge/bridge.h`.
+/// Bindings for `packages/include/bridge.h`.
 ///
-/// Regenerate bindings with `dart run ffigen --config ffigen_waku_dart_bridge_rust.yaml`.
+/// Regenerate bindings with `dart run ffigen --config ffigen_waku_dart_bridge.yaml`.
 ///
 class WakuDartBridge {
   /// Holds the symbol lookup function.
@@ -42,12 +42,12 @@ class WakuDartBridge {
 
   void invoke(
     ffi.Pointer<ffi.Char> msg,
-    int msgLen,
+    int msgSize,
     ffi.Pointer<ffi.Char> id,
   ) {
     return _invoke(
       msg,
-      msgLen,
+      msgSize,
       id,
     );
   }
@@ -100,5 +100,5 @@ class WakuDartBridge {
 }
 
 typedef CallbackInvoker = ffi.NativeFunction<
-    ffi.Void Function(
-        ffi.Handle callback, ffi.Pointer<ffi.Char> msg, ffi.Size msgLen)>;
+    ffi.Void Function(ffi.Handle callbackHandle, ffi.Pointer<ffi.Char> msg,
+        ffi.Size msgSize)>;

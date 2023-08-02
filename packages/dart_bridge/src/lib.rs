@@ -1,19 +1,21 @@
+#![allow(non_camel_case_types)]
+
 use dart_sys::{
-    Dart_Handle,
     Dart_PersistentHandle,
     Dart_InitializeApiDL,
     // Dart_NewPersistentHandle_DL,
     // Dart_HandleFromPersistent_DL,
     // Dart_DeletePersistentHandle_DL,
 };
-use std::{sync::Mutex, collections::HashMap, ffi::{CString, c_void}};
+use std::{sync::Mutex, collections::HashMap, ffi::c_void};
 use once_cell::sync::Lazy;
 
-pub type CallbackInvoker = fn(handle: Dart_Handle, msg: CString, msgSize: usize) -> ();
+pub type Dart_Handle = dart_sys::Dart_Handle;
+pub type CallbackInvoker = fn(handle: Dart_Handle, msg: *const u8, msgSize: usize) -> ();
 
 static mut CALLBACK_INVOKER: Option<CallbackInvoker> = None;
-static mut CALLBACKS: Lazy<Mutex<HashMap<CString, Dart_PersistentHandle>>> = Lazy::new(|| {
-    let m: HashMap<CString, Dart_PersistentHandle> = HashMap::new();
+static mut CALLBACKS: Lazy<Mutex<HashMap<*const u8, Dart_PersistentHandle>>> = Lazy::new(|| {
+    let m: HashMap<*const u8, Dart_PersistentHandle> = HashMap::new();
     Mutex::new(m)
 });
 
@@ -30,24 +32,24 @@ pub unsafe extern "C" fn register_invoker(invoker: *const CallbackInvoker) -> ()
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn register_callback(cb: Dart_Handle, id: *const CString) -> () {
+pub unsafe extern "C" fn register_callback(cb: Dart_Handle, id: *const u8) -> () {
     match CALLBACKS.try_lock() {
         Ok(mut lock) => {
-            lock.insert((*id).clone(), cb);
+            lock.insert(id.clone(), cb);
         },
         Err(_) => return,
     }
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn invoke(msg: *const CString, msg_len: usize, id: *const CString) -> () {
+pub unsafe extern "C" fn invoke(msg: *const u8, msg_len: usize, id: *const u8) -> () {
     match CALLBACKS.try_lock() {
         Ok(lock) => {
-            match lock.get(&(*id).clone()) {
+            match lock.get(&id.clone()) {
                 Some(cb) => {
                     match CALLBACK_INVOKER {
                         Some(invoker) => {
-                            invoker(*cb, (*msg).clone(), msg_len)
+                            invoker(*cb, msg.clone(), msg_len)
                         },
                         None => return,
                     }
