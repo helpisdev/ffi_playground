@@ -78,15 +78,37 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter(final String msg, final int msgLen) => setState(() {
+  void _incrementCounter(final String msg, final int msgLen) {
+    try {
+      setState(() {
         final int other = (int.parse(msg) + msgLen).abs();
+        if (kDebugMode) {
+          print('_incrementCounter');
+        }
         _counter += other + Random().nextInt(10);
       });
+    } on Exception catch (e, s) {
+      if (kDebugMode) {
+        print('Exception: $e\nStacktrace: $s');
+      }
+    }
+  }
 
-  void _decrementCounter(final String msg, final int msgLen) => setState(() {
+  void _decrementCounter(final String msg, final int msgLen) {
+    try {
+      setState(() {
         final int other = (int.parse(msg) + msgLen).abs();
+        if (kDebugMode) {
+          print('_decrementCounter');
+        }
         _counter += -other - Random().nextInt(10);
       });
+    } on Exception catch (e, s) {
+      if (kDebugMode) {
+        print('Exception: $e\nStacktrace: $s');
+      }
+    }
+  }
 
   @override
   void initState() {
