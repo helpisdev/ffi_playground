@@ -1,0 +1,6 @@
+{
+  "cmake.sourceDirectory": "linux",
+  "rust-analyzer.linkedProjects": [
+    "packages/dart_bridge/Cargo.toml",
+  ]
+}
